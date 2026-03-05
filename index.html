@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<title>A Peaceful Little Journey</title>
+<title>Konichiwa</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -58,6 +58,22 @@ border-radius:50px;
 opacity:0.85;
 }
 
+.progress{
+width:100%;
+height:16px;
+background:#e0e0e0;
+border-radius:10px;
+overflow:hidden;
+margin-top:20px;
+display:none;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:#8fd19e;
+}
+
 #tapBox{
 display:none;
 margin-top:20px;
@@ -84,6 +100,10 @@ Welcome traveler. Begin your journey.
 <button onclick="stage1()">Begin</button>
 </div>
 
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
 <div id="tapBox">
 Tap the button 12 times to prove your dedication.
 <br><br>
@@ -101,16 +121,13 @@ let tapCountValue=0
 
 function stage1(){
 
-document.getElementById("stage").innerHTML=
-"Stage 1 — Important question."
+setStage("Stage 1 — Important question.",
+"Did you read the instructions?")
 
-document.getElementById("buttons").innerHTML=`
+setButtons(`
 <button id="yes1">Yes</button>
 <button id="no1">No</button>
-`
-
-document.getElementById("message").innerHTML=
-"Did you read the instructions?"
+`)
 
 escapeButtons("yes1","no1",stage2)
 
@@ -118,16 +135,13 @@ escapeButtons("yes1","no1",stage2)
 
 function stage2(){
 
-document.getElementById("stage").innerHTML=
-"Stage 2 — Another question."
+setStage("Stage 2 — Another question.",
+"Are you still confident?")
 
-document.getElementById("buttons").innerHTML=`
+setButtons(`
 <button id="yes2">Yes</button>
 <button id="no2">No</button>
-`
-
-document.getElementById("message").innerHTML=
-"Are you still confident?"
+`)
 
 escapeButtons("yes2","no2",stage3)
 
@@ -135,8 +149,8 @@ escapeButtons("yes2","no2",stage3)
 
 function stage3(){
 
-document.getElementById("stage").innerHTML=
-"Stage 3 — Tap challenge."
+setStage("Stage 3 — Tap challenge.",
+"")
 
 document.getElementById("buttons").innerHTML=""
 document.getElementById("tapBox").style.display="block"
@@ -163,14 +177,10 @@ stage4()
 
 function stage4(){
 
-document.getElementById("stage").innerHTML=
-"Stage 4 — Click the button."
+setStage("Stage 4 — Click the button.",
+"This should be easy.")
 
-document.getElementById("buttons").innerHTML=
-'<button id="runBtn">Click Me</button>'
-
-document.getElementById("message").innerHTML=
-"This should be easy."
+setButtons(`<button id="runBtn">Click Me</button>`)
 
 let btn=document.getElementById("runBtn")
 
@@ -194,16 +204,13 @@ btn.onclick=stage5
 
 function stage5(){
 
-document.getElementById("stage").innerHTML=
-"Stage 5 — Final question."
+setStage("Stage 5 — Final question.",
+"Are you enjoying this experience?")
 
-document.getElementById("buttons").innerHTML=`
+setButtons(`
 <button id="yes3">Yes</button>
 <button id="no3">No</button>
-`
-
-document.getElementById("message").innerHTML=
-"Are you enjoying this experience?"
+`)
 
 escapeButtons("yes3","no3",stage6)
 
@@ -211,14 +218,13 @@ escapeButtons("yes3","no3",stage6)
 
 function stage6(){
 
-document.getElementById("stage").innerHTML=
-"Stage 6 — Catch the spinning button."
+setStage("Stage 6 — Catch the spinning button.","")
 
-document.getElementById("buttons").innerHTML=
-'<button id="spinBtn">Catch Me</button>'
+setButtons(`<button id="spinBtn">Catch Me</button>`)
+
+let btn=document.getElementById("spinBtn")
 
 let angle=0
-let btn=document.getElementById("spinBtn")
 
 let spin=setInterval(function(){
 
@@ -234,7 +240,45 @@ btn.style.transform="none"
 
 },4000)
 
-btn.onclick=finish
+btn.onclick=progressStage
+
+}
+
+function progressStage(){
+
+setStage("Final Stage — Preparing your reward...",
+"Please wait.")
+
+document.querySelector(".progress").style.display="block"
+
+let bar=document.getElementById("bar")
+
+let width=0
+
+let interval=setInterval(function(){
+
+width+=1
+bar.style.width=width+"%"
+
+if(width==99){
+
+clearInterval(interval)
+stage99()
+
+}
+
+},50)
+
+}
+
+function stage99(){
+
+setStage("Almost done...",
+"One last question before the reward.")
+
+setButtons(`
+<button onclick="finish()">Continue</button>
+`)
 
 }
 
@@ -247,6 +291,19 @@ document.getElementById("buttons").innerHTML=""
 
 document.getElementById("message").innerHTML=
 "Congratulations. You just wasted your time."
+
+}
+
+function setStage(title,msg){
+
+document.getElementById("stage").innerHTML=title
+document.getElementById("message").innerHTML=msg
+
+}
+
+function setButtons(html){
+
+document.getElementById("buttons").innerHTML=html
 
 }
 
@@ -280,15 +337,11 @@ document.getElementById("message").innerHTML=
 
 }
 
-function trigger(btn){
-move(btn)
-}
+b1.addEventListener("mouseover",()=>move(b1))
+b2.addEventListener("mouseover",()=>move(b2))
 
-b1.addEventListener("mouseover",()=>trigger(b1))
-b2.addEventListener("mouseover",()=>trigger(b2))
-
-b1.addEventListener("touchstart",()=>trigger(b1))
-b2.addEventListener("touchstart",()=>trigger(b2))
+b1.addEventListener("touchstart",()=>move(b1))
+b2.addEventListener("touchstart",()=>move(b2))
 
 b1.onclick=next
 b2.onclick=next
