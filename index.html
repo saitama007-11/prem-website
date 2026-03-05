@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>The Peaceful Journey</title>
+
+<title>A Peaceful Little Journey</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
@@ -19,9 +21,10 @@ top:50%;
 left:50%;
 transform:translate(-50%,-50%);
 background:white;
-padding:40px;
+padding:35px;
 border-radius:18px;
-width:440px;
+width:90%;
+max-width:420px;
 text-align:center;
 box-shadow:0 10px 25px rgba(0,0,0,0.15);
 }
@@ -29,7 +32,7 @@ box-shadow:0 10px 25px rgba(0,0,0,0.15);
 button{
 background:#9bd5a3;
 border:none;
-padding:12px 22px;
+padding:12px 20px;
 margin:10px;
 font-size:16px;
 border-radius:10px;
@@ -42,26 +45,32 @@ background:#7ecf8c;
 
 #message{
 margin-top:15px;
-font-size:17px;
+font-size:16px;
 color:#4a5568;
 }
 
 .cloud{
 position:absolute;
 background:white;
-width:160px;
-height:70px;
+width:150px;
+height:65px;
 border-radius:50px;
-opacity:0.8;
+opacity:0.85;
+}
+
+#tapBox{
+display:none;
+margin-top:20px;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="cloud" id="c1" style="top:100px; left:-200px;"></div>
-<div class="cloud" id="c2" style="top:230px; left:-300px;"></div>
+<div class="cloud" id="c1" style="top:80px; left:-200px;"></div>
+<div class="cloud" id="c2" style="top:200px; left:-250px;"></div>
 
 <div class="container">
 
@@ -75,15 +84,24 @@ Welcome traveler. Begin your journey.
 <button onclick="stage1()">Begin</button>
 </div>
 
+<div id="tapBox">
+Tap the button 12 times to prove your dedication.
+<br><br>
+<button onclick="tapChallenge()">Tap</button>
+<div id="tapCount"></div>
+</div>
+
 <div id="message"></div>
 
 </div>
 
 <script>
 
+let tapCountValue=0
+
 function stage1(){
 
-document.getElementById("stage").innerHTML =
+document.getElementById("stage").innerHTML=
 "Stage 1 — Important question."
 
 document.getElementById("buttons").innerHTML=`
@@ -91,7 +109,7 @@ document.getElementById("buttons").innerHTML=`
 <button id="no1">No</button>
 `
 
-document.getElementById("message").innerHTML =
+document.getElementById("message").innerHTML=
 "Did you read the instructions?"
 
 escapeButtons("yes1","no1",stage2)
@@ -100,15 +118,15 @@ escapeButtons("yes1","no1",stage2)
 
 function stage2(){
 
-document.getElementById("stage").innerHTML =
-"Stage 2 — Another important question."
+document.getElementById("stage").innerHTML=
+"Stage 2 — Another question."
 
 document.getElementById("buttons").innerHTML=`
 <button id="yes2">Yes</button>
 <button id="no2">No</button>
 `
 
-document.getElementById("message").innerHTML =
+document.getElementById("message").innerHTML=
 "Are you still confident?"
 
 escapeButtons("yes2","no2",stage3)
@@ -117,73 +135,87 @@ escapeButtons("yes2","no2",stage3)
 
 function stage3(){
 
-document.getElementById("stage").innerHTML =
-"Stage 3 — Click the button."
+document.getElementById("stage").innerHTML=
+"Stage 3 — Tap challenge."
 
-document.getElementById("buttons").innerHTML =
-'<button id="runBtn">Click Me</button>'
+document.getElementById("buttons").innerHTML=""
+document.getElementById("tapBox").style.display="block"
 
-document.getElementById("message").innerHTML =
-"This should be easy."
+document.getElementById("tapCount").innerHTML="0 / 12"
 
-let btn=document.getElementById("runBtn")
+}
 
-btn.addEventListener("mouseover",function(){
+function tapChallenge(){
 
-let x=Math.random()*260
-let y=Math.random()*140
+tapCountValue++
 
-btn.style.position="relative"
-btn.style.left=x+"px"
-btn.style.top=y+"px"
+document.getElementById("tapCount").innerHTML=
+tapCountValue+" / 12"
 
-})
+if(tapCountValue>=12){
 
-btn.onclick=stage4
+document.getElementById("tapBox").style.display="none"
+stage4()
+
+}
 
 }
 
 function stage4(){
 
-document.getElementById("stage").innerHTML =
-"Stage 4 — Yet another question."
+document.getElementById("stage").innerHTML=
+"Stage 4 — Click the button."
+
+document.getElementById("buttons").innerHTML=
+'<button id="runBtn">Click Me</button>'
+
+document.getElementById("message").innerHTML=
+"This should be easy."
+
+let btn=document.getElementById("runBtn")
+
+function move(){
+
+let x=Math.random()*200
+let y=Math.random()*120
+
+btn.style.position="relative"
+btn.style.left=x+"px"
+btn.style.top=y+"px"
+
+}
+
+btn.addEventListener("mouseover",move)
+btn.addEventListener("touchstart",move)
+
+btn.onclick=stage5
+
+}
+
+function stage5(){
+
+document.getElementById("stage").innerHTML=
+"Stage 5 — Final question."
 
 document.getElementById("buttons").innerHTML=`
 <button id="yes3">Yes</button>
 <button id="no3">No</button>
 `
 
-document.getElementById("message").innerHTML =
-"Are you enjoying this so far?"
+document.getElementById("message").innerHTML=
+"Are you enjoying this experience?"
 
-escapeButtons("yes3","no3",stage5)
-
-}
-
-function stage5(){
-
-document.getElementById("stage").innerHTML =
-"Stage 5 — System analysis."
-
-document.getElementById("buttons").innerHTML=`
-<button onclick="stage6()">Continue</button>
-`
-
-document.getElementById("message").innerHTML =
-"Analyzing your patience level..."
+escapeButtons("yes3","no3",stage6)
 
 }
 
 function stage6(){
 
-document.getElementById("stage").innerHTML =
+document.getElementById("stage").innerHTML=
 "Stage 6 — Catch the spinning button."
 
-document.getElementById("buttons").innerHTML =
+document.getElementById("buttons").innerHTML=
 '<button id="spinBtn">Catch Me</button>'
-
-document.getElementById("message").innerHTML =
-"Careful."
 
 let angle=0
 let btn=document.getElementById("spinBtn")
@@ -208,12 +240,12 @@ btn.onclick=finish
 
 function finish(){
 
-document.getElementById("stage").innerHTML =
+document.getElementById("stage").innerHTML=
 "🎉 Reward Unlocked"
 
 document.getElementById("buttons").innerHTML=""
 
-document.getElementById("message").innerHTML =
+document.getElementById("message").innerHTML=
 "Congratulations. You just wasted your time."
 
 }
@@ -223,19 +255,40 @@ function escapeButtons(id1,id2,next){
 let b1=document.getElementById(id1)
 let b2=document.getElementById(id2)
 
+let escapeCount=0
+let maxEscapes=4
+
 function move(btn){
 
-let x=Math.random()*window.innerWidth*0.6
-let y=Math.random()*window.innerHeight*0.6
+if(escapeCount>=maxEscapes) return
+
+escapeCount++
+
+let x=Math.random()*(window.innerWidth-150)
+let y=Math.random()*(window.innerHeight-150)
 
 btn.style.position="absolute"
 btn.style.left=x+"px"
 btn.style.top=y+"px"
 
+if(escapeCount>=maxEscapes){
+
+document.getElementById("message").innerHTML=
+"Alright fine. You win. Click one."
+
 }
 
-b1.addEventListener("mouseover",function(){move(b1)})
-b2.addEventListener("mouseover",function(){move(b2)})
+}
+
+function trigger(btn){
+move(btn)
+}
+
+b1.addEventListener("mouseover",()=>trigger(b1))
+b2.addEventListener("mouseover",()=>trigger(b2))
+
+b1.addEventListener("touchstart",()=>trigger(b1))
+b2.addEventListener("touchstart",()=>trigger(b2))
 
 b1.onclick=next
 b2.onclick=next
@@ -249,7 +302,7 @@ let pos=-200
 
 setInterval(function(){
 
-pos+=0.4
+pos+=0.35
 cloud.style.left=pos+"px"
 
 if(pos>window.innerWidth+200){
