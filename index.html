@@ -1,35 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>The Peaceful Challenge</title>
+<title>The Peaceful Journey</title>
 
 <style>
 
 body{
-background: linear-gradient(#d8f3dc,#fefae0);
-font-family: "Trebuchet MS", sans-serif;
-text-align:center;
-padding-top:100px;
+margin:0;
+font-family:"Trebuchet MS",sans-serif;
+background:linear-gradient(#dff6f0,#fefae0);
+overflow:hidden;
 color:#2d3748;
 }
 
 .container{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
 background:white;
-display:inline-block;
-padding:40px 60px;
+padding:40px;
 border-radius:18px;
-box-shadow:0 10px 25px rgba(0,0,0,0.1);
-}
-
-h1{
-font-weight:500;
-margin-bottom:10px;
-}
-
-#stage{
-font-size:20px;
-margin-bottom:25px;
-color:#4a5568;
+width:440px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
 }
 
 button{
@@ -40,19 +34,25 @@ margin:10px;
 font-size:16px;
 border-radius:10px;
 cursor:pointer;
-transition:0.25s;
-color:#1a202c;
 }
 
 button:hover{
 background:#7ecf8c;
-transform:scale(1.05);
 }
 
 #message{
-margin-top:20px;
-font-size:18px;
-color:#6b7280;
+margin-top:15px;
+font-size:17px;
+color:#4a5568;
+}
+
+.cloud{
+position:absolute;
+background:white;
+width:160px;
+height:70px;
+border-radius:50px;
+opacity:0.8;
 }
 
 </style>
@@ -60,16 +60,19 @@ color:#6b7280;
 
 <body>
 
+<div class="cloud" id="c1" style="top:100px; left:-200px;"></div>
+<div class="cloud" id="c2" style="top:230px; left:-300px;"></div>
+
 <div class="container">
 
-<h1>🌿 A Peaceful Little Challenge</h1>
+<h2>🌿 A Peaceful Little Journey</h2>
 
-<div id="stage">Stage 1 — Choose the correct button.</div>
+<div id="stage">
+Welcome traveler. Begin your journey.
+</div>
 
 <div id="buttons">
-<button onclick="wrong()">Correct</button>
-<button onclick="nextStage()">Definitely Correct</button>
-<button onclick="wrong()">Also Correct</button>
+<button onclick="stage1()">Begin</button>
 </div>
 
 <div id="message"></div>
@@ -78,59 +81,135 @@ color:#6b7280;
 
 <script>
 
-let stage = 1
-
-let sarcasm = [
-"Hmm... not quite.",
-"Interesting choice.",
-"That seemed confident, but incorrect.",
-"You trusted that button a little too much.",
-"Peaceful environment, questionable decisions."
-]
-
-function wrong(){
-let msg = sarcasm[Math.floor(Math.random()*sarcasm.length)]
-document.getElementById("message").innerHTML = msg
-}
-
-function nextStage(){
-
-stage++
-
-if(stage==2){
+function stage1(){
 
 document.getElementById("stage").innerHTML =
-"Stage 2 — That was too easy. Try again."
+"Stage 1 — Important question."
 
-document.getElementById("buttons").innerHTML = `
-<button onclick="wrong()">This One</button>
-<button onclick="wrong()">Maybe This</button>
-<button onclick="nextStage()">Trust Me</button>
+document.getElementById("buttons").innerHTML=`
+<button id="yes1">Yes</button>
+<button id="no1">No</button>
 `
 
-document.getElementById("message").innerHTML=""
+document.getElementById("message").innerHTML =
+"Did you read the instructions?"
+
+escapeButtons("yes1","no1",stage2)
 
 }
 
-else if(stage==3){
+function stage2(){
 
 document.getElementById("stage").innerHTML =
-"Stage 3 — The reward is near."
+"Stage 2 — Another important question."
 
-document.getElementById("buttons").innerHTML = `
-<button onclick="wrong()">Left</button>
-<button onclick="nextStage()">Center</button>
-<button onclick="wrong()">Right</button>
+document.getElementById("buttons").innerHTML=`
+<button id="yes2">Yes</button>
+<button id="no2">No</button>
 `
 
-document.getElementById("message").innerHTML="Choose wisely."
+document.getElementById("message").innerHTML =
+"Are you still confident?"
+
+escapeButtons("yes2","no2",stage3)
 
 }
 
-else{
+function stage3(){
 
 document.getElementById("stage").innerHTML =
-"🌱 Reward Unlocked"
+"Stage 3 — Click the button."
+
+document.getElementById("buttons").innerHTML =
+'<button id="runBtn">Click Me</button>'
+
+document.getElementById("message").innerHTML =
+"This should be easy."
+
+let btn=document.getElementById("runBtn")
+
+btn.addEventListener("mouseover",function(){
+
+let x=Math.random()*260
+let y=Math.random()*140
+
+btn.style.position="relative"
+btn.style.left=x+"px"
+btn.style.top=y+"px"
+
+})
+
+btn.onclick=stage4
+
+}
+
+function stage4(){
+
+document.getElementById("stage").innerHTML =
+"Stage 4 — Yet another question."
+
+document.getElementById("buttons").innerHTML=`
+<button id="yes3">Yes</button>
+<button id="no3">No</button>
+`
+
+document.getElementById("message").innerHTML =
+"Are you enjoying this so far?"
+
+escapeButtons("yes3","no3",stage5)
+
+}
+
+function stage5(){
+
+document.getElementById("stage").innerHTML =
+"Stage 5 — System analysis."
+
+document.getElementById("buttons").innerHTML=`
+<button onclick="stage6()">Continue</button>
+`
+
+document.getElementById("message").innerHTML =
+"Analyzing your patience level..."
+
+}
+
+function stage6(){
+
+document.getElementById("stage").innerHTML =
+"Stage 6 — Catch the spinning button."
+
+document.getElementById("buttons").innerHTML =
+'<button id="spinBtn">Catch Me</button>'
+
+document.getElementById("message").innerHTML =
+"Careful."
+
+let angle=0
+let btn=document.getElementById("spinBtn")
+
+let spin=setInterval(function(){
+
+angle+=6
+btn.style.transform="rotate("+angle+"deg)"
+
+},30)
+
+setTimeout(function(){
+
+clearInterval(spin)
+btn.style.transform="none"
+
+},4000)
+
+btn.onclick=finish
+
+}
+
+function finish(){
+
+document.getElementById("stage").innerHTML =
+"🎉 Reward Unlocked"
 
 document.getElementById("buttons").innerHTML=""
 
@@ -139,7 +218,50 @@ document.getElementById("message").innerHTML =
 
 }
 
+function escapeButtons(id1,id2,next){
+
+let b1=document.getElementById(id1)
+let b2=document.getElementById(id2)
+
+function move(btn){
+
+let x=Math.random()*window.innerWidth*0.6
+let y=Math.random()*window.innerHeight*0.6
+
+btn.style.position="absolute"
+btn.style.left=x+"px"
+btn.style.top=y+"px"
+
 }
+
+b1.addEventListener("mouseover",function(){move(b1)})
+b2.addEventListener("mouseover",function(){move(b2)})
+
+b1.onclick=next
+b2.onclick=next
+
+}
+
+function moveCloud(id,speed){
+
+let cloud=document.getElementById(id)
+let pos=-200
+
+setInterval(function(){
+
+pos+=0.4
+cloud.style.left=pos+"px"
+
+if(pos>window.innerWidth+200){
+pos=-200
+}
+
+},speed)
+
+}
+
+moveCloud("c1",20)
+moveCloud("c2",25)
 
 </script>
 
